@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Submission
 from questions.models import Question
 from .utils import run_python_code
+from analytics.utils import update_user_analytics
 
 
 class SubmitCodeView(APIView):
@@ -58,6 +59,9 @@ class SubmitCodeView(APIView):
             time_taken=total_time,
             is_correct=all_passed
         )
+        
+        # Update analytics
+        analytics = update_user_analytics(user)
 
         return Response({
             "submission_id": submission.id,

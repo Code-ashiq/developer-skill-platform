@@ -1,3 +1,30 @@
-from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
+from .models import UserAnalytics
+
+
+class MyAnalyticsView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        try:
+            analytics = UserAnalytics.objects.get(user=request.user)
+
+            return Response({
+                "total_submissions": analytics.total_submissions,
+                "total_correct": analytics.total_correct,
+                "accuracy": analytics.accuracy,
+                "avg_execution_time": analytics.avg_execution_time,
+                "skill_score": analytics.skill_score,
+                "skill_level": analytics.skill_level
+            })
+
+        except UserAnalytics.DoesNotExist:
+
+            return Response({
+                "message": "No analytics yet"
+            })
