@@ -4,13 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import UserAnalytics
 
-import sys
-import os
-
-# Add ML folder to path
-sys.path.append(os.path.join(os.path.dirname(__file__), "../../ml"))
-
-from predict import predict_skill
+from ml import predict_skill
 
 
 class MyAnalyticsView(APIView):

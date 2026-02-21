@@ -8,6 +8,12 @@ node_modules/
 
 # Django
 db.sqlite3
+.vscode/
+
+# ML model
+*.pkl
 
 # OS
 .DS_Store
+
+
