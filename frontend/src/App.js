@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Questions from "./pages/Questions";
 import CodeEditor from "./pages/CodeEditor";
+import Analytics from "./pages/Analytics";
 
 function App() {
 
@@ -20,6 +21,8 @@ function App() {
         <Route path="/questions" element={<Questions />} />
 
         <Route path="/questions/:id" element={<CodeEditor />} />
+
+        <Route path="/analytics" element={<Analytics />} />
 
       </Routes>
 
