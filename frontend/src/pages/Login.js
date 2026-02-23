@@ -1,26 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 
 export default function Login() {
 
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      navigate("/dashboard");
+    }
+
+  }, [navigate]);
 
   const login = async () => {
 
     try {
 
       const res = await API.post("/auth/login/", {
-        email,
-        password
+        email: email.trim(),
+        password: password.trim()
       });
 
       localStorage.setItem("token", res.data.access);
 
-      window.location.href = "/dashboard";
+      navigate("/dashboard");
 
-    } catch {
+    } catch (err) {
+
+      console.log(err);
+
       alert("Invalid credentials");
+
     }
 
   };
@@ -58,5 +75,7 @@ export default function Login() {
       </div>
 
     </div>
+
   );
+
 }

@@ -6,6 +6,8 @@ import Questions from "./pages/Questions";
 import CodeEditor from "./pages/CodeEditor";
 import Analytics from "./pages/Analytics";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
 
   return (
@@ -14,15 +16,45 @@ function App() {
 
       <Routes>
 
+        {/* Public */}
         <Route path="/" element={<Login />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
-        
-        <Route path="/questions" element={<Questions />} />
+        {/* Protected */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/questions/:id" element={<CodeEditor />} />
+        <Route
+          path="/questions"
+          element={
+            <ProtectedRoute>
+              <Questions />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/analytics" element={<Analytics />} />
+        <Route
+          path="/questions/:id"
+          element={
+            <ProtectedRoute>
+              <CodeEditor />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <Analytics />
+            </ProtectedRoute>
+          }
+        />
 
       </Routes>
 
