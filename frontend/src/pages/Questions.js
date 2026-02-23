@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
-import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
+import MainLayout from "../layouts/MainLayout";
 
 export default function Questions() {
 
@@ -46,15 +46,11 @@ export default function Questions() {
 
   return (
 
-    <div className="min-h-screen bg-gray-900 text-white">
+    <MainLayout>
 
-      <Navbar />
-
-      <div className="max-w-5xl mx-auto p-8">
-
-        <h1 className="text-3xl font-bold mb-6">
-          Questions
-        </h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Questions
+      </h1>
 
         <div className="bg-gray-800 rounded-lg">
 
@@ -87,9 +83,6 @@ export default function Questions() {
           ))}
 
         </div>
-
-      </div>
-
-    </div>
+    </MainLayout>
   );
 }

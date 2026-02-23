@@ -1,40 +1,45 @@
-import Navbar from "../components/Navbar";
+import MainLayout from "../layouts/MainLayout";
 
 export default function Dashboard() {
 
   return (
 
-    <div className="min-h-screen bg-gray-900 text-white">
+    <MainLayout>
 
-      <Navbar />
+      <h1 className="text-3xl font-bold mb-6">
+        Dashboard
+      </h1>
 
-      <div className="p-8">
+      <div className="grid grid-cols-3 gap-6">
 
-        <h1 className="text-3xl font-bold mb-6">
-          Dashboard
-        </h1>
-
-        <div className="grid grid-cols-3 gap-6">
-
-          <div className="bg-gray-800 p-6 rounded">
-            <h2 className="text-lg">Total Problems</h2>
-            <p className="text-2xl font-bold">0</p>
-          </div>
-
-          <div className="bg-gray-800 p-6 rounded">
-            <h2 className="text-lg">Accuracy</h2>
-            <p className="text-2xl font-bold">0%</p>
-          </div>
-
-          <div className="bg-gray-800 p-6 rounded">
-            <h2 className="text-lg">Skill Level</h2>
-            <p className="text-2xl font-bold">Beginner</p>
-          </div>
-
-        </div>
+        <Card title="Total Problems" value="10" />
+        <Card title="Accuracy" value="85%" />
+        <Card title="Skill Level" value="Intermediate" />
 
       </div>
 
-    </div>
+    </MainLayout>
+
   );
+
+}
+
+function Card({ title, value }) {
+
+  return (
+
+    <div className="bg-gray-800 p-6 rounded-lg">
+
+      <h2 className="text-gray-400 mb-2">
+        {title}
+      </h2>
+
+      <p className="text-2xl font-bold">
+        {value}
+      </p>
+
+    </div>
+
+  );
+
 }
