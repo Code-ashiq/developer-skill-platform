@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import API from "../services/api";
-import Navbar from "../components/Navbar";
 import Editor from "@monaco-editor/react";
+
+import API from "../services/api";
+import MainLayout from "../layouts/MainLayout";
 
 export default function CodeEditor() {
 
@@ -10,102 +11,160 @@ export default function CodeEditor() {
 
   const [question, setQuestion] = useState(null);
 
-  const [code, setCode] = useState("print(input())");
+  const [code, setCode] = useState("# Write your Python code here\nprint(input())");
 
   const [result, setResult] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
 
     const fetchQuestion = async () => {
 
-      const res = await API.get("/questions/");
+      try {
 
-      const q = res.data.find(q => q.id === parseInt(id));
+        const res = await API.get("/questions/");
 
-      setQuestion(q);
+        const q = res.data.find(q => q.id === parseInt(id));
+
+        setQuestion(q);
+
+      } catch (err) {
+
+        console.error(err);
+
+      }
+
     };
 
     fetchQuestion();
 
   }, [id]);
 
+
   const submitCode = async () => {
+
+    setLoading(true);
 
     try {
 
       const res = await API.post("/submissions/submit/", {
         question_id: id,
-        code
+        code: code
       });
 
       setResult(res.data);
 
     } catch (err) {
 
+      console.error(err);
+
       alert("Submission failed");
+
+    } finally {
+
+      setLoading(false);
 
     }
 
   };
 
-  if (!question) return null;
+
+  if (!question) {
+
+    return (
+      <MainLayout>
+        <div className="text-gray-400">Loading question...</div>
+      </MainLayout>
+    );
+
+  }
+
 
   return (
 
-    <div className="min-h-screen bg-gray-900 text-white">
+    <MainLayout>
 
-      <Navbar />
+      <div className="grid grid-cols-2 gap-6 h-[75vh]">
 
-      <div className="grid grid-cols-2 gap-4 p-6">
-
-        {/* Question */}
-        <div className="bg-gray-800 p-6 rounded">
+        {/* Question Panel */}
+        <div className="bg-gray-800 p-6 rounded-lg overflow-y-auto">
 
           <h1 className="text-2xl font-bold mb-4">
             {question.title}
           </h1>
 
-          <p className="text-gray-300">
-            {question.description}
+          <span className={
+            question.difficulty === "easy"
+              ? "text-green-400"
+              : question.difficulty === "medium"
+              ? "text-yellow-400"
+              : "text-red-400"
+          }>
+            {question.difficulty.toUpperCase()}
+          </span>
+
+          <p className="text-gray-400 mt-2 mb-4">
+            Topic: {question.topic}
           </p>
+
+          <div className="text-gray-200 whitespace-pre-wrap">
+            {question.description}
+          </div>
 
         </div>
 
-        {/* Editor */}
-        <div className="bg-gray-800 p-4 rounded">
 
-          <Editor
-            height="400px"
-            defaultLanguage="python"
-            theme="vs-dark"
-            value={code}
-            onChange={(value) => setCode(value)}
-          />
+        {/* Code Editor Panel */}
+        <div className="flex flex-col">
+
+          <div className="bg-gray-800 rounded-lg overflow-hidden">
+
+            <Editor
+              height="400px"
+              defaultLanguage="python"
+              theme="vs-dark"
+              value={code}
+              onChange={(value) => setCode(value)}
+            />
+
+          </div>
 
           <button
             onClick={submitCode}
-            className="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
+            disabled={loading}
+            className="mt-4 bg-green-600 hover:bg-green-700 px-6 py-2 rounded font-semibold disabled:opacity-50"
           >
-            Submit
+            {loading ? "Running..." : "Submit Code"}
           </button>
 
+
+          {/* Result Panel */}
           {result && (
 
-            <div className="mt-4 bg-gray-900 p-4 rounded">
+            <div className="mt-4 bg-gray-800 p-4 rounded">
+
+              <h2 className="font-bold mb-2">
+                Result
+              </h2>
 
               <p>
-                Result:
+                Status:
                 <span className={
                   result.is_correct
-                    ? "text-green-400"
-                    : "text-red-400"
+                    ? "text-green-400 ml-2"
+                    : "text-red-400 ml-2"
                 }>
-                  {result.is_correct ? " Correct" : " Incorrect"}
+                  {result.is_correct ? "Correct" : "Incorrect"}
                 </span>
               </p>
 
               <p>
-                Execution Time: {result.total_time.toFixed(4)}s
+                Execution Time:
+                <span className="ml-2">
+                  {result.total_time.toFixed(4)} seconds
+                </span>
               </p>
 
             </div>
@@ -116,6 +175,8 @@ export default function CodeEditor() {
 
       </div>
 
-    </div>
+    </MainLayout>
+
   );
+
 }
