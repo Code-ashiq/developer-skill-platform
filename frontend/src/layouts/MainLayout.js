@@ -43,6 +43,13 @@ export default function MainLayout({ children }) {
             Analytics
           </Link>
 
+          <Link
+            to="/submissions"
+            className="block text-gray-300 hover:text-white"
+          >
+            Submissions
+          </Link>
+
           <button
             onClick={logout}
             className="block text-red-400 hover:text-red-300"

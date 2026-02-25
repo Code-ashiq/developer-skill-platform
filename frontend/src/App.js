@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import Questions from "./pages/Questions";
 import CodeEditor from "./pages/CodeEditor";
 import Analytics from "./pages/Analytics";
+import Submissions from "./pages/Submissions";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -52,6 +53,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Analytics />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/submissions"
+          element={
+            <ProtectedRoute>
+              <Submissions />
             </ProtectedRoute>
           }
         />

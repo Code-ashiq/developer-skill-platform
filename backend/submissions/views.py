@@ -6,6 +6,7 @@ from .models import Submission
 from questions.models import Question
 from .utils import run_python_code
 from analytics.utils import update_user_analytics
+from .serializers import SubmissionSerializer
 
 
 class SubmitCodeView(APIView):
@@ -69,3 +70,17 @@ class SubmitCodeView(APIView):
             "total_time": total_time,
             "test_results": results
         })
+        
+class MySubmissionsView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        submissions = Submission.objects.filter(
+            user=request.user
+        ).order_by("-created_at")
+
+        serializer = SubmissionSerializer(submissions, many=True)
+
+        return Response(serializer.data)
