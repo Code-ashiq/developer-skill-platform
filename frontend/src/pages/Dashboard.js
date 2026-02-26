@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import MainLayout from "../layouts/MainLayout";
+import AnalyticsChart from "../components/AnalyticsChart";
 
 export default function Dashboard() {
 
@@ -79,6 +80,12 @@ export default function Dashboard() {
           title="Avg Execution Time"
           value={data.avg_execution_time.toFixed(4) + " s"}
         />
+
+      </div>
+
+      <div className="mt-8">
+
+        <AnalyticsChart analytics={data} />
 
       </div>
 
