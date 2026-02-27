@@ -50,6 +50,13 @@ export default function MainLayout({ children }) {
             Submissions
           </Link>
 
+          <Link 
+            to="/admin/questions"
+            className="block text-gray-300 hover:text-white"
+          >
+            Admin Questions
+          </Link>
+
           <button
             onClick={logout}
             className="block text-red-400 hover:text-red-300"

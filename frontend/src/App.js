@@ -6,6 +6,7 @@ import Questions from "./pages/Questions";
 import CodeEditor from "./pages/CodeEditor";
 import Analytics from "./pages/Analytics";
 import Submissions from "./pages/Submissions";
+import AdminQuestions from "./pages/AdminQuestions";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -62,6 +63,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Submissions />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/questions"
+          element={
+            <ProtectedRoute>
+              <AdminQuestions />
             </ProtectedRoute>
           }
         />

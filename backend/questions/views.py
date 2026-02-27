@@ -1,12 +1,50 @@
-from rest_framework import generics, permissions
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import generics
+
 from .models import Question
 from .serializers import QuestionSerializer
+from rest_framework import status
 
 class QuestionListView(generics.ListAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
-class QuestionCreateView(generics.CreateAPIView):
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = [permissions.IsAdminUser]
+
+class CreateQuestionView(APIView):
+
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def post(self, request):
+
+        serializer = QuestionSerializer(data=request.data)
+
+        if serializer.is_valid():
+
+            serializer.save()
+
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=400)
+    
+class DeleteQuestionView(APIView):
+
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def delete(self, request, pk):
+
+        try:
+
+            question = Question.objects.get(pk=pk)
+
+            question.delete()
+
+            return Response({"message": "Deleted"})
+
+        except Question.DoesNotExist:
+
+            return Response(
+                {"error": "Not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
