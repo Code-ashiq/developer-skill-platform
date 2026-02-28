@@ -6,36 +6,71 @@ export default function AdminQuestions() {
 
   const [questions, setQuestions] = useState([]);
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [difficulty, setDifficulty] = useState("easy");
-  const [topic, setTopic] = useState("");
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    difficulty: "easy",
+    topic: ""
+  });
+
+  const [editingId, setEditingId] = useState(null);
 
   const fetchQuestions = async () => {
-
     const res = await API.get("/questions/");
-
     setQuestions(res.data);
-
   };
 
   useEffect(() => {
-
     fetchQuestions();
-
   }, []);
 
-  const createQuestion = async () => {
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
 
-    await API.post("/questions/create/", {
-      title,
-      description,
-      difficulty,
-      topic
+  const handleSubmit = async () => {
+
+    if (editingId) {
+
+      await API.put(
+        `/questions/update/${editingId}/`,
+        form
+      );
+
+      setEditingId(null);
+
+    } else {
+
+      await API.post(
+        "/questions/create/",
+        form
+      );
+
+    }
+
+    setForm({
+      title: "",
+      description: "",
+      difficulty: "easy",
+      topic: ""
     });
 
     fetchQuestions();
+  };
 
+  const handleEdit = (question) => {
+
+    setEditingId(question.id);
+
+    setForm({
+      title: question.title,
+      description: question.description,
+      difficulty: question.difficulty,
+      topic: question.topic
+    });
   };
 
   const deleteQuestion = async (id) => {
@@ -43,7 +78,6 @@ export default function AdminQuestions() {
     await API.delete(`/questions/delete/${id}/`);
 
     fetchQuestions();
-
   };
 
   return (
@@ -54,32 +88,38 @@ export default function AdminQuestions() {
         Admin Question Management
       </h1>
 
-
-      {/* Create Form */}
-
+      {/* Form */}
       <div className="bg-gray-800 p-6 rounded mb-6">
 
         <input
+          name="title"
+          value={form.title}
           placeholder="Title"
           className="w-full p-2 mb-2 bg-gray-700"
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={handleChange}
         />
 
         <textarea
+          name="description"
+          value={form.description}
           placeholder="Description"
           className="w-full p-2 mb-2 bg-gray-700"
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={handleChange}
         />
 
         <input
+          name="topic"
+          value={form.topic}
           placeholder="Topic"
           className="w-full p-2 mb-2 bg-gray-700"
-          onChange={(e) => setTopic(e.target.value)}
+          onChange={handleChange}
         />
 
         <select
-          className="w-full p-2 mb-2 bg-gray-700"
-          onChange={(e) => setDifficulty(e.target.value)}
+          name="difficulty"
+          value={form.difficulty}
+          className="w-full p-2 mb-4 bg-gray-700"
+          onChange={handleChange}
         >
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
@@ -87,17 +127,15 @@ export default function AdminQuestions() {
         </select>
 
         <button
-          onClick={createQuestion}
+          onClick={handleSubmit}
           className="bg-green-600 px-4 py-2 rounded"
         >
-          Create Question
+          {editingId ? "Update Question" : "Create Question"}
         </button>
 
       </div>
 
-
       {/* Question List */}
-
       <div className="bg-gray-800 p-6 rounded">
 
         {questions.map(q => (
@@ -111,12 +149,23 @@ export default function AdminQuestions() {
               {q.title} ({q.difficulty})
             </div>
 
-            <button
-              onClick={() => deleteQuestion(q.id)}
-              className="text-red-400"
-            >
-              Delete
-            </button>
+            <div className="space-x-4">
+
+              <button
+                onClick={() => handleEdit(q)}
+                className="text-blue-400"
+              >
+                Edit
+              </button>
+
+              <button
+                onClick={() => deleteQuestion(q.id)}
+                className="text-red-400"
+              >
+                Delete
+              </button>
+
+            </div>
 
           </div>
 

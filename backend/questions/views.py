@@ -48,3 +48,29 @@ class DeleteQuestionView(APIView):
                 {"error": "Not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
+            
+class UpdateQuestionView(APIView):
+
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def put(self, request, pk):
+
+        try:
+            question = Question.objects.get(pk=pk)
+        except Question.DoesNotExist:
+            return Response(
+                {"error": "Question not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = QuestionSerializer(
+            question,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=400)
