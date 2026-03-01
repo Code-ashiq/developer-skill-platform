@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -9,6 +9,18 @@ import Submissions from "./pages/Submissions";
 import AdminQuestions from "./pages/AdminQuestions";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import { getUserRole } from "./utils/auth";
+
+function AdminRoute({ children }) {
+
+  const token = localStorage.getItem("token");
+  const isAdmin = getUserRole();
+
+  if (!token) return <Navigate to="/" />;
+  if (!isAdmin) return <Navigate to="/dashboard" />;
+
+  return children;
+}
 
 function App() {
 
@@ -70,9 +82,9 @@ function App() {
         <Route
           path="/admin/questions"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <AdminQuestions />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
 

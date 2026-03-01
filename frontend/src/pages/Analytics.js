@@ -7,6 +7,7 @@ export default function Analytics() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
 
     const fetchAnalytics = async () => {
@@ -15,7 +16,14 @@ export default function Analytics() {
 
         const res = await API.get("/analytics/me/");
 
-        setData(res.data);
+        setData({
+          total_submissions: res.data.total_submissions ?? 0,
+          total_correct: res.data.total_correct ?? 0,
+          accuracy: res.data.accuracy ?? 0,
+          skill_score: res.data.skill_score ?? 0,
+          skill_level: res.data.skill_level ?? "Beginner",
+          avg_execution_time: res.data.avg_execution_time ?? 0
+        });
 
       } catch (err) {
 
@@ -76,12 +84,12 @@ export default function Analytics() {
 
         <Card
           title="Accuracy"
-          value={(data.accuracy * 100).toFixed(1) + "%"}
+          value={((data.accuracy ?? 0) * 100).toFixed(2)}
         />
 
         <Card
           title="Avg Execution Time"
-          value={data.avg_execution_time.toFixed(4) + " s"}
+          value={(data.avg_execution_time ?? 0).toFixed(4)}
         />
 
         <Card

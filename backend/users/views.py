@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
 from .serializers import EmailTokenObtainPairSerializer
 
 
@@ -25,3 +26,7 @@ class ProfileView(APIView):
             "username": request.user.username,
             "email": request.user.email
         })
+        
+class CustomLoginView(TokenObtainPairView):
+
+    serializer_class = CustomTokenObtainPairSerializer

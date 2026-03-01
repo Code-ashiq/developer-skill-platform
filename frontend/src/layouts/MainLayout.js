@@ -1,11 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
+import { getUserRole } from "../utils/auth";
 
 export default function MainLayout({ children }) {
 
   const navigate = useNavigate();
 
+  const isAdmin = getUserRole();
+
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("is_admin");
     navigate("/");
   };
 
@@ -50,12 +54,14 @@ export default function MainLayout({ children }) {
             Submissions
           </Link>
 
-          <Link 
-            to="/admin/questions"
-            className="block text-gray-300 hover:text-white"
-          >
-            Admin Questions
-          </Link>
+          {isAdmin && (
+            <Link
+              to="/admin/questions"
+              className="block text-gray-300 hover:text-white"
+            >
+              Admin Questions
+            </Link>
+          )}
 
           <button
             onClick={logout}

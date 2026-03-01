@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -16,7 +17,17 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
     username_field = "email"
+    
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    @classmethod
+    def get_token(cls, user):
+
+        token = super().get_token(user)
+
+        token["is_admin"] = user.is_staff
+
+        return token

@@ -15,7 +15,14 @@ export default function Dashboard() {
 
         const res = await API.get("/analytics/me/");
 
-        setData(res.data);
+        setData({
+          total_submissions: res.data.total_submissions ?? 0,
+          total_correct: res.data.total_correct ?? 0,
+          accuracy: res.data.accuracy ?? 0,
+          skill_level: res.data.skill_level ?? "Beginner",
+          skill_score: res.data.skill_score ?? 0,
+          avg_execution_time: res.data.avg_execution_time ?? 0
+        });
 
       } catch (err) {
 
@@ -58,7 +65,11 @@ export default function Dashboard() {
 
         <Card
           title="Accuracy"
-          value={(data.accuracy * 100).toFixed(1) + "%"}
+          value={
+            data.accuracy !== undefined
+              ? (data.accuracy * 100).toFixed(1) + "%"
+              : "0%"
+          }
         />
 
         <Card
@@ -68,7 +79,7 @@ export default function Dashboard() {
 
         <Card
           title="Skill Score"
-          value={data.skill_score}
+          value={data.skill_score ?? 0}
         />
 
         <Card
@@ -78,7 +89,11 @@ export default function Dashboard() {
 
         <Card
           title="Avg Execution Time"
-          value={data.avg_execution_time.toFixed(4) + " s"}
+          value={
+            data.avg_execution_time !== undefined
+              ? data.avg_execution_time.toFixed(4) + " s"
+              : "0.0000 s"
+          }
         />
 
       </div>
