@@ -36,19 +36,34 @@ export default function AdminQuestions() {
 
   const createTestCase = async () => {
 
-    await API.post("/questions/testcase/create/", {
-      question: selectedQuestion,
-      input_data: inputData,
-      expected_output: expectedOutput,
-      is_hidden: isHidden
-    });
+    if (!inputData || !expectedOutput) {
+      alert("Input and Expected Output are required.");
+      return;
+    }
 
-    setInputData("");
-    setExpectedOutput("");
-    setIsHidden(false);
+    try {
 
-    fetchTestCases(selectedQuestion);
+      await API.post("/questions/testcase/create/", {
+        question: selectedQuestion,
+        input_data: inputData,
+        expected_output: expectedOutput,
+        is_hidden: isHidden
+      });
+
+      setInputData("");
+      setExpectedOutput("");
+      setIsHidden(false);
+
+      fetchTestCases(selectedQuestion);
+
+    } catch (error) {
+
+      alert("Failed to create test case.");
+
+    }
   };
+
+  
 
   const deleteTestCase = async (id) => {
 
@@ -70,21 +85,28 @@ export default function AdminQuestions() {
 
   const handleSubmit = async () => {
 
-    if (editingId) {
+    if (!form.title || !form.description || !form.topic) {
+      alert("All fields are required.");
+      return;
+    }
 
-      await API.put(
-        `/questions/update/${editingId}/`,
-        form
-      );
+    try {
 
-      setEditingId(null);
+      if (editingId) {
 
-    } else {
+        await API.put(
+          `/questions/update/${editingId}/`,
+          form
+        );
 
-      await API.post(
-        "/questions/create/",
-        form
-      );
+        setEditingId(null);
+
+      } else {
+
+        await API.post(
+          "/questions/create/",
+          form
+        );
 
     }
 
@@ -96,7 +118,13 @@ export default function AdminQuestions() {
     });
 
     fetchQuestions();
-  };
+
+  } catch (error) {
+
+    alert("Failed to save questions.")
+
+  }
+};
 
   const handleEdit = (question) => {
 
