@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import MainLayout from "../layouts/MainLayout";
+import toast from "react-hot-toast";
 
 export default function AdminQuestions() {
 
@@ -10,6 +11,7 @@ export default function AdminQuestions() {
   const [inputData, setInputData] = useState("");
   const [expectedOutput, setExpectedOutput] = useState("");
   const [isHidden, setIsHidden] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
@@ -37,7 +39,7 @@ export default function AdminQuestions() {
   const createTestCase = async () => {
 
     if (!inputData || !expectedOutput) {
-      alert("Input and Expected Output are required.");
+      toast.error("Input and Expected Output are required.");
       return;
     }
 
@@ -58,7 +60,7 @@ export default function AdminQuestions() {
 
     } catch (error) {
 
-      alert("Failed to create test case.");
+      toast.error("Failed to create test case.");
 
     }
   };
@@ -86,11 +88,13 @@ export default function AdminQuestions() {
   const handleSubmit = async () => {
 
     if (!form.title || !form.description || !form.topic) {
-      alert("All fields are required.");
+      toast.error("All fields are required.");
       return;
     }
 
     try {
+
+      setLoading(true);
 
       if (editingId) {
 
@@ -98,6 +102,8 @@ export default function AdminQuestions() {
           `/questions/update/${editingId}/`,
           form
         );
+
+        toast.success("Question updated");
 
         setEditingId(null);
 
@@ -107,6 +113,8 @@ export default function AdminQuestions() {
           "/questions/create/",
           form
         );
+
+        toast.success("Question created");
 
     }
 
@@ -121,7 +129,11 @@ export default function AdminQuestions() {
 
   } catch (error) {
 
-    alert("Failed to save questions.")
+    toast.error("Failed to save questions.")
+
+  } finally {
+
+    setLoading(false);
 
   }
 };
@@ -193,9 +205,10 @@ export default function AdminQuestions() {
 
         <button
           onClick={handleSubmit}
+          disabled={loading}
           className="bg-green-600 px-4 py-2 rounded"
         >
-          {editingId ? "Update Question" : "Create Question"}
+          {loading ? "Saving..." : "Save Question"}
         </button>
 
       </div>

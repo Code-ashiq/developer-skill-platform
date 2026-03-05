@@ -10,6 +10,7 @@ import AdminQuestions from "./pages/AdminQuestions";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import { getUserRole } from "./utils/auth";
+import { Toaster } from "react-hot-toast";
 
 function AdminRoute({ children }) {
 
@@ -25,7 +26,8 @@ function AdminRoute({ children }) {
 function App() {
 
   return (
-
+    <>
+    <Toaster position="top-right" />
     <BrowserRouter>
 
       <Routes>
@@ -91,6 +93,7 @@ function App() {
       </Routes>
 
     </BrowserRouter>
+    </>
 
   );
 }
