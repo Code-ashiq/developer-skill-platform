@@ -296,29 +296,51 @@ export default function AdminQuestions() {
             Add Test Case
           </button>
 
-          {testCases.map(tc => (
+          <table className="w-full text-left">
 
-            <div
-              key={tc.id}
-              className="border-b border-gray-700 p-2 flex justify-between"
-            >
+            <thead>
 
-              <div>
-                <div>Input: {tc.input_data}</div>
-                <div>Output: {tc.expected_output}</div>
-                <div>{tc.is_hidden ? "Hidden" : "Visible"}</div>
-              </div>
+              <tr className="border-b border-gray-700">
 
-              <button
-                onClick={() => deleteTestCase(tc.id)}
-                className="text-red-400"
-              >
-                Delete
-              </button>
+                <th>Input</th>
+                <th>Expected Output</th>
+                <th>Hidden</th>
+                <th>Actions</th>
 
-            </div>
+              </tr>
 
-          ))}
+            </thead>
+
+            <tbody>
+
+              {testCases.map(tc => (
+
+                <tr key={tc.id} className="border-b border-gray-700">
+
+                  <td>{tc.input_data}</td>
+
+                  <td>{tc.expected_output}</td>
+
+                  <td>{tc.is_hidden ? "Yes" : "No"}</td>
+
+                  <td>
+
+                    <button
+                      onClick={() => deleteTestCase(tc.id)}
+                      className="text-red-400"
+                    >
+                      Delete
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
 
         </div>
 
