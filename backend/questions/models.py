@@ -1,6 +1,11 @@
 from django.db import models
 
+
 class Question(models.Model):
+    
+    class Meta:
+        ordering = ["-created_at"]
+
     DIFFICULTY_CHOICES = [
         ('easy', 'Easy'),
         ('medium', 'Medium'),
@@ -11,9 +16,13 @@ class Question(models.Model):
     description = models.TextField()
     difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)
     topic = models.CharField(max_length=100)
-    test_cases = models.JSONField()  # stores input-output pairs
+
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
+    def __str__(self):
+        return self.title
+
+
 class TestCase(models.Model):
 
     question = models.ForeignKey(
@@ -23,15 +32,10 @@ class TestCase(models.Model):
     )
 
     input_data = models.TextField()
-
     expected_output = models.TextField()
-
     is_hidden = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"TestCase for {self.question.title}"
-
-    def __str__(self):
-        return self.title

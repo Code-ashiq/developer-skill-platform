@@ -110,8 +110,12 @@ export default function AdminQuestions() {
       } else {
 
         await API.post(
-          "/questions/create/",
-          form
+          "/questions/create/", {
+            title: form.title,
+            description: form.description,
+            difficulty: form.difficulty,
+            topic: form.topic
+          }
         );
 
         toast.success("Question created");
@@ -129,7 +133,12 @@ export default function AdminQuestions() {
 
   } catch (error) {
 
-    toast.error("Failed to save questions.")
+      console.log(error.response?.data);
+
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to save question"
+      );
 
   } finally {
 

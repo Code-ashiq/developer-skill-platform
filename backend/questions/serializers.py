@@ -25,18 +25,20 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = "__all__"
 
-    def validate(self, data):
-
-        if not data.get("title"):
+    def validate_title(self, value):
+        if not value:
             raise serializers.ValidationError("Title is required.")
-
-        if not data.get("description"):
-            raise serializers.ValidationError("Description is required.")
-
-        if not data.get("topic"):
+        return value
+    
+    def validate_description(self, value):
+        if not value:
+            raise serializers.ValidationError("Description id required.")
+        return value
+    
+    def validate_topic(self, value):
+        if not value:
             raise serializers.ValidationError("Topic is required.")
-
-        return data
+        return value
         
 
         

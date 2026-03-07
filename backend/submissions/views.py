@@ -7,6 +7,7 @@ from questions.models import Question
 from .utils import run_python_code
 from analytics.utils import update_user_analytics
 from .serializers import SubmissionSerializer
+from questions.models import Question, TestCase
 
 
 class SubmitCodeView(APIView):
@@ -32,12 +33,14 @@ class SubmitCodeView(APIView):
         total_time = 0
         results = []
 
-        # Run code against all test cases
-        for case in question.test_cases:
+        # Get test cases from database
+        test_cases = TestCase.objects.filter(question=question)
+        
+        for case in test_cases:
 
-            result = run_python_code(code, case["input"])
+            result = run_python_code(code, case.input_data)
 
-            passed = result["output"] == case["output"]
+            passed = result["output"] == case.expected_output
 
             if not passed:
                 all_passed = False
@@ -45,8 +48,8 @@ class SubmitCodeView(APIView):
             total_time += result["execution_time"]
 
             results.append({
-                "input": case["input"],
-                "expected": case["output"],
+                "input": case.input_data,
+                "expected": case.expected_output,
                 "actual": result["output"],
                 "passed": passed,
                 "error": result["error"]
