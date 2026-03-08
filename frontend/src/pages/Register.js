@@ -50,6 +50,7 @@ export default function Register() {
       const message =
         error.response?.data?.email?.[0] ||
         error.response?.data?.username?.[0] ||
+        error.response?.data?.password?.[0] ||
         "Registration failed";
 
       toast.error(message);
