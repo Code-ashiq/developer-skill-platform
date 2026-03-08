@@ -72,6 +72,13 @@ export default function Login() {
           Login
         </button>
 
+        <p
+          className="text-gray-400 mt-4 text-center cursor-pointer"
+          onClick={() => navigate("/register")}
+        >
+          Don't have an account? Register
+        </p>
+
       </div>
 
     </div>

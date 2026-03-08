@@ -7,6 +7,7 @@ import CodeEditor from "./pages/CodeEditor";
 import Analytics from "./pages/Analytics";
 import Submissions from "./pages/Submissions";
 import AdminQuestions from "./pages/AdminQuestions";
+import Register from "./pages/Register";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import { getUserRole } from "./utils/auth";
@@ -34,6 +35,7 @@ function App() {
 
         {/* Public */}
         <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         {/* Protected */}
         <Route
