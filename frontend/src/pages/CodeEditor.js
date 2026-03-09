@@ -86,7 +86,7 @@ export default function CodeEditor() {
 
     <MainLayout>
 
-      <div className="grid grid-cols-2 gap-6 h-[75vh]">
+      <div className="grid grid-cols-2 gap-6 min-h-[75vh]">
 
         {/* Question Panel */}
         <div className="bg-gray-800 p-6 rounded-lg overflow-y-auto">
@@ -117,7 +117,7 @@ export default function CodeEditor() {
 
 
         {/* Code Editor Panel */}
-        <div className="flex flex-col">
+        <div className="flex flex-col overflow-y-auto">
 
           <div className="bg-gray-800 rounded-lg overflow-hidden">
 
@@ -143,29 +143,64 @@ export default function CodeEditor() {
           {/* Result Panel */}
           {result && (
 
-            <div className="mt-4 bg-gray-800 p-4 rounded">
+            <div className="mt-6 bg-gray-800 p-4 rounded">
 
-              <h2 className="font-bold mb-2">
-                Result
+              <h2 className="text-xl font-bold mb-3">
+                Submission Result
               </h2>
 
-              <p>
-                Status:
-                <span className={
-                  result.is_correct
-                    ? "text-green-400 ml-2"
-                    : "text-red-400 ml-2"
-                }>
-                  {result.is_correct ? "Correct" : "Incorrect"}
+              <p className="mb-3">
+                Status: 
+                <span className={result.is_correct ? "text-green-400 ml-2" : "text-red-400 ml-2"}>
+                  {result.is_correct ? "Accepted" : "Failed"}
                 </span>
               </p>
 
-              <p>
-                Execution Time:
-                <span className="ml-2">
-                  {result.total_time.toFixed(4)} seconds
-                </span>
+              <p className="mb-4">
+                Execution Time: {result.total_time.toFixed(4)} seconds
               </p>
+
+              <h3 className="text-lg mb-2">Test Cases</h3>
+
+              <div className="space-y-3">
+
+                {result.test_results.map((tc, index) => (
+
+                  <div
+                    key={index}
+                    className="bg-gray-700 p-3 rounded"
+                  >
+
+                    <p>
+                      <strong>Input:</strong> {tc.input}
+                    </p>
+
+                    <p>
+                      <strong>Expected:</strong> {tc.expected}
+                    </p>
+
+                    <p>
+                      <strong>Output:</strong> {tc.actual}
+                    </p>
+
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      <span className={tc.passed ? "text-green-400" : "text-red-400"}>
+                        {tc.passed ? "Passed" : "Failed"}
+                      </span>
+                    </p>
+
+                    {tc.error && (
+                      <p className="text-red-400">
+                        Error: {tc.error}
+                      </p>
+                    )}
+
+                  </div>
+
+                ))}
+
+              </div>
 
             </div>
 
