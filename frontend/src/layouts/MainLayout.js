@@ -34,10 +34,10 @@ export default function MainLayout({ children }) {
           </Link>
 
           <Link
-            to="/questions"
+            to="/problems"
             className="block text-gray-300 hover:text-white"
           >
-            Questions
+            Problems
           </Link>
 
           <Link

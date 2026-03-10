@@ -14,6 +14,11 @@ class Question(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
+    constraints = models.TextField(blank=True)
+    examples = models.TextField(blank=True)
+    starter_code = models.TextField(
+        default="# Write your Python code here\n"
+    )
     difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)
     topic = models.CharField(max_length=100)
 

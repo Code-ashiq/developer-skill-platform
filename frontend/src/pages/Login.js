@@ -14,7 +14,7 @@ export default function Login() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      navigate("/dashboard");
+      navigate("/problems");
     }
 
   }, [navigate]);
@@ -30,7 +30,7 @@ export default function Login() {
 
       localStorage.setItem("token", res.data.access);
 
-      navigate("/dashboard");
+      navigate("/problems");
 
     } catch (err) {
 

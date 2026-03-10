@@ -2,12 +2,12 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import Questions from "./pages/Questions";
 import CodeEditor from "./pages/CodeEditor";
 import Analytics from "./pages/Analytics";
 import Submissions from "./pages/Submissions";
 import AdminQuestions from "./pages/AdminQuestions";
 import Register from "./pages/Register";
+import Problems from "./pages/Problems";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import { getUserRole } from "./utils/auth";
@@ -36,6 +36,8 @@ function App() {
         {/* Public */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/problems" element={<Problems />} />
+        <Route path="/problems/:id" element={<CodeEditor />} />
 
         {/* Protected */}
         <Route
@@ -43,24 +45,6 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/questions"
-          element={
-            <ProtectedRoute>
-              <Questions />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/questions/:id"
-          element={
-            <ProtectedRoute>
-              <CodeEditor />
             </ProtectedRoute>
           }
         />

@@ -7,9 +7,28 @@ from .models import Question, TestCase
 from .serializers import QuestionSerializer, TestCaseSerializer
 from rest_framework import status
 
-class QuestionListView(generics.ListAPIView):
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
+class QuestionListView(APIView):
+    
+    def get(self, request):
+        
+        difficulty = request.query_params.get("difficulty")
+        topic = request.query_params.get("topic")
+        search = request.query_params.get("search")
+        
+        questions = Question.objects.all()
+        
+        if difficulty:
+            questions = questions.filter(difficulty=difficulty)
+            
+        if topic:
+            questions = questions.filter(topic_icontains=topic)
+            
+        if search:
+            questions = questions.filter(title_icontains=search)
+            
+        serializer = QuestionSerializer(questions, many=True)
+        
+        return Response(serializer.data)
 
 
 class CreateQuestionView(APIView):
