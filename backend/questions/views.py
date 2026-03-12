@@ -21,10 +21,10 @@ class QuestionListView(APIView):
             questions = questions.filter(difficulty=difficulty)
             
         if topic:
-            questions = questions.filter(topic_icontains=topic)
+            questions = questions.filter(topic__icontains=topic)
             
         if search:
-            questions = questions.filter(title_icontains=search)
+            questions = questions.filter(title__icontains=search)
             
         serializer = QuestionSerializer(questions, many=True)
         
