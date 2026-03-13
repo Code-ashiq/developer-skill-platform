@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import MainLayout from "../layouts/MainLayout";
@@ -13,21 +13,25 @@ export default function Problems() {
 
   const [difficulty, setDifficulty] = useState("");
 
-  const fetchProblems = async () => {
+  const [page, setPage] = useState(1);
+
+  const fetchProblems = useCallback (async () => {
 
     const params = {};
 
     if (search) params.search = search;
     if (difficulty) params.difficulty = difficulty;
 
-    const res = await API.get("/questions/", { params });
+    const res = await API.get("/questions/", { 
+      params: { search, difficulty, page} 
+    });
 
     setProblems(res.data);
-  };
+  }, [search, difficulty, page]);
 
   useEffect(() => {
     fetchProblems();
-  }, []);
+  }, [fetchProblems]);
 
   return (
 
@@ -36,6 +40,10 @@ export default function Problems() {
       <h1 className="text-2xl font-bold mb-6">
         Problem Library
       </h1>
+
+      <p className="text-gray-400 mb-6">
+        {problems.length} problems available
+      </p>
 
       {/* Filters */}
 
@@ -77,7 +85,7 @@ export default function Problems() {
         <thead>
 
           <tr className="border-b border-gray-700">
-
+            <th></th>
             <th>Title</th>
             <th>Difficulty</th>
             <th>Topic</th>
@@ -95,6 +103,10 @@ export default function Problems() {
               className="border-b border-gray-700 cursor-pointer hover:bg-gray-800"
               onClick={() => navigate(`/problems/${problem.id}`)}
             >
+
+              <td>
+                {problem.solved ? "✔" : ""}
+              </td>
 
               <td>{problem.title}</td>
 
@@ -119,6 +131,24 @@ export default function Problems() {
         </tbody>
 
       </table>
+
+      <div className="flex gap-4 mt-6">
+
+      <button
+        onClick={() => setPage(p => Math.max(1, p - 1))}
+        className="bg-gray-700 px-4 py-2 rounded"
+      >
+        Previous
+      </button>
+
+      <button
+        onClick={() => setPage(p => p + 1)}
+        className="bg-gray-700 px-4 py-2 rounded"
+      >
+        Next
+      </button>
+
+      </div>
 
     </MainLayout>
   );

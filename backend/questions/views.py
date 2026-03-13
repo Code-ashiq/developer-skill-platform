@@ -5,30 +5,56 @@ from rest_framework import generics
 
 from .models import Question, TestCase
 from .serializers import QuestionSerializer, TestCaseSerializer
+from submissions.models import Submission
 from rest_framework import status
 
 class QuestionListView(APIView):
-    
+
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
-        
+
         difficulty = request.query_params.get("difficulty")
         topic = request.query_params.get("topic")
         search = request.query_params.get("search")
-        
+        page = int(request.query_params.get("page", 1))
+
+        limit = 10
+        start = (page - 1) * limit
+        end = start + limit
+
         questions = Question.objects.all()
-        
+
         if difficulty:
             questions = questions.filter(difficulty=difficulty)
-            
+
         if topic:
             questions = questions.filter(topic__icontains=topic)
-            
+
         if search:
             questions = questions.filter(title__icontains=search)
-            
-        serializer = QuestionSerializer(questions, many=True)
-        
-        return Response(serializer.data)
+
+        questions = questions[start:end]
+
+        data = []
+
+        for q in questions:
+
+            solved = Submission.objects.filter(
+                user=request.user,
+                question=q,
+                is_correct=True
+            ).exists()
+
+            data.append({
+                "id": q.id,
+                "title": q.title,
+                "difficulty": q.difficulty,
+                "topic": q.topic,
+                "solved": solved
+            })
+
+        return Response(data)
 
 
 class CreateQuestionView(APIView):
