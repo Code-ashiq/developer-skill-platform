@@ -80,15 +80,15 @@ export default function Problems() {
 
       {/* Problem Table */}
 
-      <table className="w-full text-left">
+      <table className="w-full text-left border-seperate border-spacing-y-2">
 
         <thead>
 
-          <tr className="border-b border-gray-700">
-            <th></th>
-            <th>Title</th>
-            <th>Difficulty</th>
-            <th>Topic</th>
+          <tr className="text-grey-400 text-sm">
+            <th className="w-10"></th>
+            <th className="py-2">Title</th>
+            <th className="py-2">Difficulty</th>
+            <th className="py-2">Topic</th>
 
           </tr>
 
@@ -96,33 +96,40 @@ export default function Problems() {
 
         <tbody>
 
-          {problems.map(problem => (
+          {problems.map((problem, index) => (
 
             <tr
               key={problem.id}
-              className="border-b border-gray-700 cursor-pointer hover:bg-gray-800"
+              className={`cursor-pointer hover:bg-gray-700 transition ${
+                index % 2 === 0 ? "bg-gray-800" : "bg-gray-900"
+              }`}
               onClick={() => navigate(`/problems/${problem.id}`)}
             >
 
-              <td>
+              <td className="px-4 py-3 text-green-400 font-bold">
                 {problem.solved ? "✔" : ""}
               </td>
 
-              <td>{problem.title}</td>
+              <td className="px-4 py-3 font-medium">
+                
+                {problem.title}
+              </td>
 
               <td
-                className={
+                className={`px-4 py-3 font-semibold ${
                   problem.difficulty === "easy"
                     ? "text-green-400"
                     : problem.difficulty === "medium"
                     ? "text-yellow-400"
                     : "text-red-400"
-                }
+                }`}
               >
                 {problem.difficulty}
               </td>
 
-              <td>{problem.topic}</td>
+              <td className="px-4 py-3 text-gray-400">
+                {problem.topic}
+              </td>
 
             </tr>
 
