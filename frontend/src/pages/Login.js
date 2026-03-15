@@ -29,6 +29,7 @@ export default function Login() {
       });
 
       localStorage.setItem("token", res.data.access);
+      localStorage.setItem("refresh", res.data.refresh);
 
       navigate("/problems");
 
