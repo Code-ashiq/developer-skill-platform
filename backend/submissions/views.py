@@ -87,3 +87,43 @@ class MySubmissionsView(APIView):
         serializer = SubmissionSerializer(submissions, many=True)
 
         return Response(serializer.data)
+    
+class RunCodeView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        code = request.data.get("code")
+        question_id = request.data.get("question_id")
+
+        if not code or not question_id:
+            return Response({"error": "Missing data"}, status=400)
+
+        try:
+            question = Question.objects.get(id=question_id)
+        except Question.DoesNotExist:
+            return Response({"error": "Question not found"}, status=404)
+
+        results = []
+
+        # Only run NON-HIDDEN test cases
+        test_cases = TestCase.objects.filter(
+            question=question,
+            is_hidden=False
+        )
+
+        for case in test_cases:
+
+            result = run_python_code(code, case.input_data)
+
+            results.append({
+                "input": case.input_data,
+                "expected": case.expected_output,
+                "actual": result["output"],
+                "error": result["error"]
+            })
+
+        return Response({
+            "results": results
+        })

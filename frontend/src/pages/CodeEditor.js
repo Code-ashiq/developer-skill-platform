@@ -17,6 +17,8 @@ export default function CodeEditor() {
 
   const [loading, setLoading] = useState(false);
 
+  const [runResult, setRunResult] = useState(null);
+
 
   useEffect(() => {
 
@@ -65,6 +67,26 @@ export default function CodeEditor() {
     } finally {
 
       setLoading(false);
+
+    }
+
+  };
+
+  const runCode = async () => {
+
+    try {
+
+      const res = await API.post("/submissions/run/", {
+        question_id: id,
+        code: code
+      });
+
+      setRunResult(res.data);
+
+    } catch (err) {
+
+      console.error(err);
+      alert("Run failed");
 
     }
 
@@ -158,12 +180,45 @@ export default function CodeEditor() {
           </div>
 
           <button
+            onClick={runCode}
+            className="mt-4 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded font-semibold"
+          >
+            Run Code
+          </button>
+
+          <button
             onClick={submitCode}
             disabled={loading}
             className="mt-4 bg-green-600 hover:bg-green-700 px-6 py-2 rounded font-semibold disabled:opacity-50"
           >
             {loading ? "Running..." : "Submit Code"}
           </button>
+
+          {runResult && (
+
+            <div className="mt-6 bg-gray-800 p-4 rounded">
+
+              <h2 className="text-lg font-bold mb-3">Run Results</h2>
+
+              {runResult.results.map((r, i) => (
+
+                <div key={i} className="mb-3 bg-gray-700 p-3 rounded">
+
+                  <p><strong>Input:</strong> {r.input}</p>
+                  <p><strong>Expected:</strong> {r.expected}</p>
+                  <p><strong>Output:</strong> {r.actual}</p>
+
+                  {r.error && (
+                    <p className="text-red-400">Error: {r.error}</p>
+                  )}
+
+                </div>
+
+              ))}
+
+            </div>
+
+          )}
 
 
           {/* Result Panel */}
