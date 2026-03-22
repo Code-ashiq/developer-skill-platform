@@ -11,7 +11,7 @@ export default function CodeEditor() {
 
   const [question, setQuestion] = useState(null);
 
-  const [code, setCode] = useState("# Write your Python code here\nprint(input())");
+  const [code, setCode] = useState("");
 
   const [result, setResult] = useState(null);
 
@@ -24,11 +24,11 @@ export default function CodeEditor() {
 
       try {
 
-        const res = await API.get("/questions/");
+        const res = await API.get(`/questions/${id}/`);
 
-        const q = res.data.find(q => q.id === parseInt(id));
+        setQuestion(res.data);
 
-        setQuestion(q);
+        setCode(res.data.starter_code || "");
 
       } catch (err) {
 
@@ -89,19 +89,22 @@ export default function CodeEditor() {
       <div className="grid grid-cols-2 gap-6 min-h-[75vh]">
 
         {/* Question Panel */}
+        
         <div className="bg-gray-800 p-6 rounded-lg overflow-y-auto">
 
-          <h1 className="text-2xl font-bold mb-4">
+          <h1 className="text-2xl font-bold mb-2">
             {question.title}
           </h1>
 
-          <span className={
-            question.difficulty === "easy"
-              ? "text-green-400"
-              : question.difficulty === "medium"
-              ? "text-yellow-400"
-              : "text-red-400"
-          }>
+          <span
+            className={
+              question.difficulty === "easy"
+                ? "text-green-400"
+                : question.difficulty === "medium"
+                ? "text-yellow-400"
+                : "text-red-400"
+            }
+          >
             {question.difficulty.toUpperCase()}
           </span>
 
@@ -109,12 +112,35 @@ export default function CodeEditor() {
             Topic: {question.topic}
           </p>
 
-          <div className="text-gray-200 whitespace-pre-wrap">
-            {question.description}
+          {/* Description */}
+          <div className="mb-4">
+            <h3 className="font-semibold mb-1">Description</h3>
+            <p className="text-gray-300 whitespace-pre-wrap">
+              {question.description}
+            </p>
           </div>
 
-        </div>
+          {/* Constraints */}
+          {question.constraints && (
+            <div className="mb-4">
+              <h3 className="font-semibold mb-1">Constraints</h3>
+              <p className="text-gray-300 whitespace-pre-wrap">
+                {question.constraints}
+              </p>
+            </div>
+          )}
 
+          {/* Examples */}
+          {question.examples && (
+            <div className="mb-4">
+              <h3 className="font-semibold mb-1">Examples</h3>
+              <pre className="bg-gray-900 p-3 rounded text-sm text-gray-300 whitespace-pre-wrap">
+                {question.examples}
+              </pre>
+            </div>
+          )}
+
+        </div>
 
         {/* Code Editor Panel */}
         <div className="flex flex-col overflow-y-auto">
