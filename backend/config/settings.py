@@ -2,6 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 import os
 import dj_database_url
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -11,10 +12,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-o78cdr3%4ctjxvbz661eigtwdhy!fv3j%xmt$*3t(t6qnk3poi'
+SECRET_KEY = config('django-insecure-o78cdr3%4ctjxvbz661eigtwdhy!fv3j%xmt$*3t(t6qnk3poi')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3'
+        default=config('DATABASE_URL')
     )
 }
 
