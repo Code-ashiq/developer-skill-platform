@@ -22,7 +22,7 @@ export default function Problems() {
     if (search) params.search = search;
     if (difficulty) params.difficulty = difficulty;
 
-    const res = await API.get("/questions/", { 
+    const res = await API.get("api/questions/", { 
       params: { search, difficulty, page} 
     });
 

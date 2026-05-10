@@ -23,13 +23,13 @@ export default function AdminQuestions() {
   const [editingId, setEditingId] = useState(null);
 
   const fetchQuestions = async () => {
-    const res = await API.get("/questions/");
+    const res = await API.get("api/questions/");
     setQuestions(res.data);
   };
 
   const fetchTestCases = async (questionId) => {
 
-    const res = await API.get(`/questions/${questionId}/`);
+    const res = await API.get(`api/questions/${questionId}/`);
 
     setTestCases(res.data.cases || []);
 
@@ -45,7 +45,7 @@ export default function AdminQuestions() {
 
     try {
 
-      await API.post("/questions/testcase/create/", {
+      await API.post("api/questions/testcase/create/", {
         question: selectedQuestion,
         input_data: inputData,
         expected_output: expectedOutput,
@@ -69,7 +69,7 @@ export default function AdminQuestions() {
 
   const deleteTestCase = async (id) => {
 
-    await API.delete(`/questions/testcase/delete/${id}/`);
+    await API.delete(`api/questions/testcase/delete/${id}/`);
 
     fetchTestCases(selectedQuestion);
   };
@@ -99,7 +99,7 @@ export default function AdminQuestions() {
       if (editingId) {
 
         await API.put(
-          `/questions/update/${editingId}/`,
+          `api/questions/update/${editingId}/`,
           form
         );
 
@@ -110,7 +110,7 @@ export default function AdminQuestions() {
       } else {
 
         await API.post(
-          "/questions/create/", {
+          "api/questions/create/", {
             title: form.title,
             description: form.description,
             difficulty: form.difficulty,
@@ -161,7 +161,7 @@ export default function AdminQuestions() {
 
   const deleteQuestion = async (id) => {
 
-    await API.delete(`/questions/delete/${id}/`);
+    await API.delete(`api/questions/delete/${id}/`);
 
     fetchQuestions();
   };

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
+  baseURL: process.env.REACT_APP_API_BASE_URL
 });
 
 
@@ -13,9 +13,9 @@ API.interceptors.request.use((config) => {
   // Do NOT attach token to auth endpoints
   if (
     token &&
-    !config.url.includes("/auth/login") &&
-    !config.url.includes("/auth/register") &&
-    !config.url.includes("/auth/token/refresh")
+    !config.url.includes("api/auth/login") &&
+    !config.url.includes("api/auth/register") &&
+    !config.url.includes("api/auth/token/refresh")
   ) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -41,9 +41,9 @@ API.interceptors.response.use(
 
     // Do NOT refresh for login/register/refresh endpoints
     if (
-      originalRequest.url.includes("/auth/login") ||
-      originalRequest.url.includes("/auth/register") ||
-      originalRequest.url.includes("/auth/token/refresh")
+      originalRequest.url.includes("api/auth/login") ||
+      originalRequest.url.includes("api/auth/register") ||
+      originalRequest.url.includes("api/auth/token/refresh")
     ) {
       return Promise.reject(error);
     }
@@ -63,7 +63,7 @@ API.interceptors.response.use(
       try {
 
         const res = await axios.post(
-          "http://127.0.0.1:8000/api/auth/token/refresh/",
+          `${process.env.REACT_APP_API_BASE_URL}/api/auth/token/refresh/`,
           { refresh }
         );
 

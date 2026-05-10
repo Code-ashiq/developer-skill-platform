@@ -26,7 +26,7 @@ export default function CodeEditor() {
 
       try {
 
-        const res = await API.get(`/questions/${id}/`);
+        const res = await API.get(`api/questions/${id}/`);
 
         setQuestion(res.data);
 
