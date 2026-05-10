@@ -130,7 +130,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 AUTH_USER_MODEL = 'users.User'
 
 CORS_ALLOWED_ORIGINS = [
-    "https://developer-skill-platform.vercel.app/",
+    "https://developer-skill-platform.vercel.app",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
